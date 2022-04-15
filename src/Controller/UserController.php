@@ -20,7 +20,6 @@ class UserController extends AbstractController
      */
     public function search(UserRepository $userR, SerializerInterface $serializer, Request $request): Response
     {
-
         try{
             $params = $request->query->all();
             $data = User::getSearch($userR,$params);
@@ -31,14 +30,12 @@ class UserController extends AbstractController
                 $v['login']['passwordStrength'] = User::calculatePassStrength($v['login']['password']);
                 $val[] = $v;
             }
-
             if ($format == 'xml') {
                 $response = new Response($serializer->serialize($val, 'xml'), 200);
                 $response->headers->set('Content-Type', 'text/xml');
             } else if($format == 'json') {
                 $response = $this->json($val, 200);
                 $response->headers->set('Content-Type', 'text/json');
-                
             }else{
                 return $this->json('format invalid', 500);
             }
@@ -73,7 +70,6 @@ class UserController extends AbstractController
                 $em->persist($row);
             }
             $em->flush();
-
             return $this->json(['data' => $data],202);
         } catch (Exception $e) {
             return $this->json('une erreur est survenu', 500);
